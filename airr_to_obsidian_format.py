@@ -9,7 +9,7 @@ input_fixed = user_input.strip('"')
 filename = Path(input_fixed)
 
 final_list = []
-with open(filename, 'r') as f:
+with open(filename, 'r+') as f:
     lines = f.readlines()
     non_blank_lines = []
     for line in lines:
@@ -19,12 +19,11 @@ with open(filename, 'r') as f:
     for line in non_blank_lines:
         new_string = re.findall('\[[^\]]*\]|\([^\)]*\)|\"[^\"]*\"|\S+', line)
         quote_words = new_string[2:]
-        quote = ' '.join(quote_words)
-        if quote == '':
-            quote = "1"
+        # you can do the if statement inline
+        quote = ' '.join(quote_words) if quote_words else "1"
         final_form = str('- [' + quote + "]" + new_string[1])
         final_list.append(final_form)
-
-with open(filename, 'w') as f:
+    
+    # write the same file. Avoids the double IO
     for line in final_list:
         f.write('%s\n' % line)
